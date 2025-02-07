@@ -7,6 +7,7 @@ const notFound = require('./middleware/notFoundMiddleware');
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const taskRoutes = require("./routes/taskRoutes");
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use(morgan("dev"));
 
 app.use(`${baseUrl}/auth`, authRoutes);
 app.use(`${baseUrl}/user`, userRoutes);
+app.use(`${baseUrl}/task`, taskRoutes);
 
 //middileware for not found urls
 app.use(notFound)
