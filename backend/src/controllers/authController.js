@@ -14,6 +14,8 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(email)
+    console.log(password)
     const response = await loginUser(email, password);
     res.status(200).json({ success: true, message: 'User logined successfully', data: response });
   } 

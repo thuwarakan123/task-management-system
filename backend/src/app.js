@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const notFound = require('./middleware/notFoundMiddleware');
 
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(helmet());
 app.use(morgan("dev"));
 
 app.use(`${baseUrl}/auth`, authRoutes);
+app.use(`${baseUrl}/user`, userRoutes);
 
 //middileware for not found urls
 app.use(notFound)

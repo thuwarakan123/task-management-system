@@ -1,22 +1,59 @@
-// const User = require("../models/userModel");
-// const bcrypt = require("bcryptjs");
-// const jwt = require("jsonwebtoken");
+const User = require("../models/userModel");
+const mongoose = require("mongoose");
 
-// exports.createUser = async (userData) => {
-//   const existingUser = await User.findOne({ email: userData.email });
-//   if (existingUser) throw { status: 400, message: "Email already exists" };
+const createUser = async (userData) => {
+  const existingUser = await User.findOne({ email: userData.email });
 
-//   const newUser = new User(userData);
-//   return await newUser.save();
-// };
+  if (existingUser) throw new Error('Email already exists');  
 
-// exports.loginUser = async (email, password) => {
-//   const user = await User.findOne({ email });
-//   if (!user) throw { status: 401, message: "Invalid credentials" };
+  const newUser = new User(userData);
+  return await newUser.save();
+};
 
-//   const isMatch = await bcrypt.compare(password, user.password);
-//   if (!isMatch) throw { status: 401, message: "Invalid credentials" };
+const getAllUsers = async () => {
+  return await User.find({}, { password: 0, __v: 0, otp: 0, otpExpiry: 0 });  
+};
 
-//   const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
-//   return { token, user };
-// };
+const getUserById = async (userId) => {
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new Error("Invalid user ID format");
+  }
+
+  const user = await User.findById(userId, { password: 0, __v: 0, otp: 0, otpExpiry: 0 });
+
+  if (!user) throw new Error('User not found');
+
+  return user;
+};
+
+const updateUser = async (userId, updateData) => {
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new Error("Invalid user ID format");
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true, runValidators: true });
+
+  if (!updatedUser) throw new Error('User not found');
+
+  return updatedUser;
+};
+
+const deleteUser = async (userId) => {
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new Error("Invalid user ID format");
+  }
+
+  const deletedUser = await User.findByIdAndDelete(userId);
+
+  if (!deletedUser) throw new Error('User not found');
+
+  return deletedUser;
+};
+
+module.exports = {
+   createUser,
+   getAllUsers,
+   getUserById,
+   updateUser,
+   deleteUser
+}
