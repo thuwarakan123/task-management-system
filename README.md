@@ -1,7 +1,7 @@
 # Task Management System
 
 ## 📌 Project Overview
-The **Task Management System** is a web application built with **React.js (Ant Design, TypeScript)** for the frontend and **Express.js (Node.js, MongoDB)** for the backend. This system is designed to efficiently manage users and tasks with role-based access control. The application includes a **micro-frontend** architecture for task management.
+The **Task Management System** is a web application built with **React.js (Ant Design, TypeScript)** for the frontend and **Express.js (Node.js, MongoDB)** for the backend. This system is designed to efficiently manage users and tasks with role-based access control.
 
 ## 🚀 Features
 ### **🔑 Authentication & Authorization**
@@ -19,7 +19,6 @@ The **Task Management System** is a web application built with **React.js (Ant D
 - **View Users**: List of all registered users.
 - **Edit Users**: Update user details.
 - **Delete Users**: Remove users from the system.
-- **Google Maps Integration**: Pick user address via Google Maps.
 - **Phone Number Validation**: Ensures correct phone format with country code.
 
 ### **📋 Task Management**
@@ -83,20 +82,7 @@ npm install
 ```sh
 npm start
 ```
-**Frontend URL:** `http://localhost:3001`
-
----
-
-## 🏗️ Micro Frontend Setup (Task Management Module)
-```sh
-cd task-management-module
-npm install
-```
-### **🔹 Run the Micro Frontend**
-```sh
-npm start
-```
-**Micro Frontend URL:** `http://localhost:3002`
+**Frontend URL:** `http://localhost:3000`
 
 ---
 
@@ -154,11 +140,11 @@ npm start
 ---
 
 ## ⚡️ Additional Notes
-✔ **Developed using modern UI components with Ant Design.**
-✔ **Role-based authentication with JWT & Middleware protection.**
-✔ **Uses Module Federation to load Task Management separately.**
-✔ **API testing made easy with Postman & Swagger UI.**
-✔ **Fully Responsive UI for Admin and Users.**
+- ✔ **Developed using modern UI components with Ant Design.**
+- ✔ **Role-based authentication with JWT & Middleware protection.**
+- ✔ **Uses Module Federation to load Task Management separately.**
+- ✔ **API testing made easy with Postman & Swagger UI.**
+- ✔ **Fully Responsive UI for Admin and Users.**
 
 ---
 
