@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Card, Checkbox, Typography, message, Space } from "antd";
+import { Form, Input, Button, Card, Typography, message } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../services/authService.ts";
@@ -31,10 +31,13 @@ const Login: React.FC = () => {
     try {
       const response = await login(values.email, values.password);
       const role = response.data.user.role;
+      const name = `${response.data.user.firstName} ${response.data.user.lastName}`
+
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("role", role);
+      localStorage.setItem("name", name);
+
       message.success("Login successful!");
-      // navigate("/dashboard");
 
       if (role === "admin") {
         navigate("/admin-dashboard");
