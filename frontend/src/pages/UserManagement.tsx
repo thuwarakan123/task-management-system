@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Space, Input, message, Card, Typography } from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined, DeleteOutlined, SendOutlined } from "@ant-design/icons";
 import { getUsers, deleteUser } from "../services/userService.ts";
+import { sendOTP } from "../services/authService.ts";
 import CreateUserModal from "../components/CreateUserModal.tsx"; 
 
 const { Title } = Typography;
@@ -61,6 +62,16 @@ const UserManagement: React.FC = () => {
     }
   };
 
+  const handleSendOtp = async (email: string) => {
+    try {
+      await sendOTP(email);
+      message.success(`OTP sent to ${email}`);
+    } 
+    catch (error) {
+      message.error("Failed to send otp");
+    }
+  };
+
   return (
     <Card style={styles.card}>
       <Title level={3}>User Management</Title>
@@ -81,7 +92,7 @@ const UserManagement: React.FC = () => {
         rowKey="_id"
         loading={loading}
         bordered
-        pagination={{ pageSize: 3 }}
+        pagination={{ pageSize: 5 }}
       >
         <Table.Column title="First Name" dataIndex="firstName" />
         <Table.Column title="Last Name" dataIndex="lastName" />
@@ -95,6 +106,7 @@ const UserManagement: React.FC = () => {
             <Space>
               <Button icon={<EditOutlined />} onClick={() => handleEditUser(user)}>Edit</Button>
               <Button danger icon={<DeleteOutlined />} onClick={() => handleDeleteUser(user._id)}>Delete</Button>
+              <Button type="primary" ghost icon={<SendOutlined />} onClick={() => handleSendOtp(user.email)}>Send OTP</Button>
             </Space>
           )}
         />

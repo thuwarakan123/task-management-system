@@ -12,7 +12,7 @@ const {
 router.post("/", authenticate, isAdmin, createUserData);
 router.get("/", authenticate, isAdmin, getAllUsersData);
 router.get("/:id", authenticate, isAdmin, getUserByIdData);
-router.put("/:id", authenticate, isAdmin, updateUserData);
+router.put("/:id", authenticate, updateUserData);
 router.delete("/:id", authenticate, isAdmin, deleteUserData);
 
 module.exports = router;

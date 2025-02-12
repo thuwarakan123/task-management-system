@@ -1,5 +1,4 @@
 exports.handleError = (res, error) => {
-    console.log(error)
 
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map(val => val.message);

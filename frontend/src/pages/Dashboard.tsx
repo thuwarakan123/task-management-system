@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Layout, Menu, Button, Typography, Avatar, Dropdown, Space, Breadcrumb } from "antd";
 import { UserOutlined, OrderedListOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import UserManagement from "./UserManagement.tsx";
+import AdminTaskManagement from "./AdminTaskManagement.tsx";
+import UserTaskManagement from "./UserTaskManagement.tsx";
 import { useNavigate } from "react-router-dom";
 
 const { Header, Content, Sider } = Layout;
@@ -48,14 +50,23 @@ const styles: any = {
 
 const AdminDashboard: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedMenu, setSelectedMenu] = useState("user-management");
+  const [selectedMenu, setSelectedMenu] = useState("");
   const [username, setUsername] = useState<string | null>(null);
   const navigate = useNavigate();
+  const role = localStorage.getItem("role");
 
   useEffect(() => {
+    const role = localStorage.getItem("role");
     const name = localStorage.getItem("name");
     if (name) {
       setUsername(name);
+    }
+
+    if(role === 'user'){
+      setSelectedMenu("task-management-user");
+    }
+    else{  
+      setSelectedMenu("user-management-admin")   
     }
   }, []);
 
@@ -63,6 +74,7 @@ const AdminDashboard: React.FC = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("name");
+    localStorage.removeItem("id");
     navigate("/");
   };
 
@@ -90,12 +102,24 @@ const AdminDashboard: React.FC = () => {
           onClick={({ key }) => setSelectedMenu(key)}
           style={{padding:"10px"}}
         >
-          <Menu.Item key="user-management" icon={<UserOutlined />}>
-            User Manage
-          </Menu.Item>
-          <Menu.Item key="task-management" icon={<OrderedListOutlined />}>
-            Task Manage
-          </Menu.Item>
+          {
+            role === 'admin' &&
+            <Menu.Item key="user-management-admin" icon={<UserOutlined />}>
+              User Manage
+            </Menu.Item>
+          }
+          {
+            role === 'admin' &&
+            <Menu.Item key="task-management-admin" icon={<OrderedListOutlined />}>
+              Task Manage
+            </Menu.Item>
+          }
+          {       
+            role === 'user' && 
+            <Menu.Item key="task-management-user" icon={<OrderedListOutlined />}>
+              Task Manage
+            </Menu.Item>
+          }
         </Menu>
 
         <div style={styles.logoutContainer}>
@@ -115,7 +139,7 @@ const AdminDashboard: React.FC = () => {
               onClick={() => setCollapsed(!collapsed)}
               style={styles.collapseBtn}
             />
-            <Title level={4} style={{ margin: 0 }}>Admin Dashboard</Title>
+            <Title level={4} style={{ margin: 0 }}>{role === 'admin' ? "Admin Dashboard" : "User Dashboard"}</Title>
           </Space>
           <Dropdown overlay={menuItems} trigger={["click"]}>
             <Space style={styles.profileContainer}>
@@ -127,15 +151,12 @@ const AdminDashboard: React.FC = () => {
         <Content style={styles.content}>
           <Breadcrumb style={{ marginBottom: 16 }}>
             <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-            <Breadcrumb.Item>{selectedMenu === "user-management" ? "User Management" : "Task Management"}</Breadcrumb.Item>
+            <Breadcrumb.Item>{selectedMenu === "task-management-user" ? "User Management" : "Task Management"}</Breadcrumb.Item>
           </Breadcrumb>
 
-          {selectedMenu === "user-management" && <UserManagement />}
-          {selectedMenu === "task-management" && (
-            <div style={styles.placeholder}>
-              <Title level={3}>Task Management (Coming Soon)</Title>
-            </div>
-          )}
+          {selectedMenu === "user-management-admin" && <UserManagement />}
+          {selectedMenu === "task-management-admin" && <AdminTaskManagement/>}
+          {selectedMenu === "task-management-user" && <UserTaskManagement/>}
         </Content>
       </Layout>
     </Layout>
@@ -143,5 +164,7 @@ const AdminDashboard: React.FC = () => {
 };
 
 export default AdminDashboard;
+
+
 
 

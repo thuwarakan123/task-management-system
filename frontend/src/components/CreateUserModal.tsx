@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Input, Button, Select, Row, Col, message, Typography } from "antd";
 import { createUser, updateUser } from "../services/userService.ts";
+import "react-phone-input-2/lib/style.css";
+import PhoneInput from "react-phone-input-2";
+import { sendOTP } from "../services/authService.ts";
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -47,37 +50,50 @@ const styles: any = {
 const CreateUserModal: React.FC<CreateUserModalProps> = ({ visible, onClose, userData, refreshUsers }) => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   useEffect(() => {
     if (userData) {
       form.setFieldsValue(userData);
+      setPhoneNumber(userData.mobileNumber || "");
     } 
     else {
       form.resetFields();
+      setPhoneNumber("");
     }
   }, [userData, visible, form]);
 
   const handleSubmit = async (values: any) => {
+    setLoading(true);
+    const userValues = { ...values, mobileNumber: phoneNumber };
+
+    if (!phoneNumber || phoneNumber.length < 10) {
+      message.error("Please enter a valid mobile number with country code.");
+      return;
+    }
+
     try {
-      setLoading(true);
+      
       if (userData) {
-        await updateUser(userData._id, values);
+        await updateUser(userData._id, userValues);
         message.success("User updated successfully");
+
+        await sendOTP(userValues.email);
+        message.success(`OTP sent to ${userValues.email}`);
       } 
       else {
-        await createUser(values);
+        await createUser(userValues);
         message.success("User created successfully");
       }
       onClose();
       refreshUsers();
     } 
     catch (error) {
-      message.error("Operation failed");
       if(userData){
-        message.success("Failed to updated user");
+        message.error("Failed to updated user : " + error?.response?.data.message || " ");
       }
       else{
-        message.success("Failed to created user");
+        message.error("Failed to created user : " + error?.response?.data.message || " ");
       }
     } 
     finally {
@@ -124,11 +140,19 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({ visible, onClose, use
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Mobile Number" name="mobileNumber" rules={[
+            {/* <Form.Item label="Mobile Number" name="mobileNumber" rules={[
               { required: true, message: "Enter mobile number" },
               { pattern: /^[0-9]{10,15}$/, message: "Enter a valid mobile number" },
             ]}>
               <Input placeholder="+1234567890" />
+            </Form.Item> */}
+            <Form.Item label="Mobile Number" required>
+              <PhoneInput
+                country={"us"}
+                value={phoneNumber}
+                onChange={(value) => setPhoneNumber(value)}
+                inputStyle={{ width: "100%" }}
+              />
             </Form.Item>
           </Col>
         </Row>
