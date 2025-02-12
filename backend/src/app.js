@@ -21,7 +21,7 @@ app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(`${baseUrl}/auth`, authRoutes);
 app.use(`${baseUrl}/user`, userRoutes);
